@@ -1,11 +1,11 @@
 require('dotenv').config()
 const express = require('express')
-const path = require('path')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const usersRouter = require('./src/routes/users_routes')
 const coursesRouter = require('./src/routes/courses_routes')
 const categoryRouter = require('./src/routes/category_routes')
+const refreshTokenRouter = require('./src/routes/refresh_token_routes')
 
 const app = express()
 
@@ -20,6 +20,7 @@ app.use(cors())
 app.use('/users', usersRouter)
 app.use('/course', coursesRouter)
 app.use('/category', categoryRouter)
+app.use('/refresh-token', refreshTokenRouter)
 
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}`)

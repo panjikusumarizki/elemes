@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
-const JWT_KEY = process.env.JWT_KEY
+const { JWT_KEY } = process.env
 
-const verifyToken = async (req, res, next) => {
+const authentication = async (req, res, next) => {
     const token = req.headers.authorization
     jwt.verify(token, JWT_KEY, (err, decoded) => {
         if (err) {
@@ -13,8 +13,9 @@ const verifyToken = async (req, res, next) => {
     })
 }
 
-const permission = async (req, res, next) => {
-    const admin = req.user.isAdmin
+const authorization = async (req, res, next) => {
+    const admin = req.user.userData.admin
+    
     if (admin === 0) {
         return res.status(405).json({
             status: 'error',
@@ -25,4 +26,4 @@ const permission = async (req, res, next) => {
     return next()
 }
 
-module.exports = { verifyToken, permission }
+module.exports = { authentication, authorization }

@@ -1,13 +1,13 @@
 const express = require('express')
 const usersController = require('../controllers/users_controller')
-const { verifyToken, permission } = require('../helpers/auth')
+const { authentication, authorization } = require('../helpers/auth')
 
 const router = express.Router()
 
 router.post('/register', usersController.register)
 router.post('/login', usersController.login)
-router.post('/logout', verifyToken, usersController.logout)
-router.post('/delete', verifyToken, permission, usersController.deleteUser)
-router.post('/restore', verifyToken, permission, usersController.restoreUser)
+router.post('/logout', authentication, usersController.logout)
+router.post('/delete', authentication, authorization, usersController.deleteUser)
+router.post('/restore', authentication, authorization, usersController.restoreUser)
 
 module.exports = router

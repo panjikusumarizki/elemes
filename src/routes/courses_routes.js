@@ -1,16 +1,16 @@
 const express = require('express')
 const courseController = require('../controllers/courses_controller')
-const { verifyToken, permission } = require('../helpers/auth')
-const {upload, uploadMultiple} = require('../helpers/multer')
+const { authentication, authorization } = require('../helpers/auth')
+const {uploadMultiple} = require('../helpers/multer')
 
 const router = express.Router()
 
-router.post('/insert', uploadMultiple, courseController.addCourse)
-router.get('', courseController.getCourse)
-router.get('/popular', courseController.getPopularCourse)
-router.get('/detail/:id', courseController.getDetailCourse)
-router.get('/search', courseController.searchCourse)
-router.put('/edit/:id', uploadMultiple, courseController.editCourse)
-router.delete('/delete/:id', courseController.deleteCourse)
+router.post('/insert', authentication, authorization, uploadMultiple, courseController.addCourse)
+router.get('', authentication, courseController.getCourse)
+router.get('/popular', authentication, courseController.getPopularCourse)
+router.get('/detail/:id', authentication, courseController.getDetailCourse)
+router.get('/search', authentication, courseController.searchCourse)
+router.put('/edit/:id', authentication, authorization, uploadMultiple, courseController.editCourse)
+router.delete('/delete/:id', authentication, authorization, courseController.deleteCourse)
 
 module.exports = router

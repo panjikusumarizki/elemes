@@ -1,7 +1,8 @@
 const user = require('../models/user')
+const RefreshToken = require('../models/refresh_token')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { JWT_KEY } = process.env
+const { JWT_KEY, JWT_REFRESH_KEY } = process.env
 
 const register = async (req, res) => {
     try {
@@ -60,17 +61,23 @@ const login = async (req, res) => {
         if (checkUser.isActive === 0) {
             return res.json({
                 status: 'success',
-                message: 'Akun anda untuk sementara dinonaktifkan, silakan hubungi call center kami untuk mengaktifkan kembali akun anda'
+                message: 'Akun tidak ditemukan'
             })
         } else {
             const pass = password
             const passwordMatch = await bcrypt.compare(pass, checkUser.password)
             
             if (passwordMatch) {
-                const token = jwt.sign({
+                const userData = {
+                    id: checkUser._id,
+                    nama: checkUser.nama,
                     email: checkUser.email,
-                    isAdmin: checkUser.isAdmin
-                }, JWT_KEY, { expiresIn: 3500 })
+                    admin: checkUser.isAdmin
+                }
+
+                const token = jwt.sign({ userData }, JWT_KEY, { expiresIn: '5m' })
+
+                const refreshToken = jwt.sign({ userData }, JWT_REFRESH_KEY, { expiresIn: '1h' })
 
                 checkUser.token = token
 
@@ -78,7 +85,8 @@ const login = async (req, res) => {
                 return res.status(200).json({
                     status: 'success',
                     message: 'login success',
-                    token
+                    token,
+                    refreshToken
                 })
             } else {
                 return res.status(400).json({
@@ -135,6 +143,8 @@ const logout = async (req, res) => {
     try {
         const userId = req.body.userId
         const users = await user.findOne({ _id: userId })
+        const refreshToken = await RefreshToken.findOne({ id_user: userId })
+        refreshToken.remove()
 
         if (!users) {
             return res.status(404).json({
