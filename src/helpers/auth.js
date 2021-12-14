@@ -14,7 +14,7 @@ const authentication = async (req, res, next) => {
 }
 
 const authorization = async (req, res, next) => {
-    const admin = req.user.userData.admin
+    const admin = req.user.data.userData.admin
     
     if (admin === 0) {
         return res.status(405).json({

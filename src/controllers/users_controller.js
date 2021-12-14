@@ -52,6 +52,23 @@ const register = async (req, res) => {
     }
 }
 
+const getUser = async (req, res) => {
+    try {
+        const getAll = await user.find()
+        const totalUser = getAll.length
+
+        return res.json({
+            status: 'success',
+            total_user: totalUser
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: 'error',
+            message: error.message
+        })
+    }
+}
+
 const login = async (req, res) => {
     const { email, password } = req.body
 
@@ -199,6 +216,7 @@ const restoreUser = async (req, res) => {
 
 module.exports = {
     register,
+    getUser,
     login,
     logout,
     deleteUser,

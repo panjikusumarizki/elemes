@@ -63,10 +63,15 @@ const addCourse = async (req, res) => {
 const getCourse = async (req, res) => {
     try {
         const getAll = await Course.find()
+        const totalCourse = getAll.length
+
+        const freeCourses = getAll.filter(e => e.price === 0)
 
         return res.send({
             status: 'success',
-            data: getAll
+            data: getAll,
+            total_course: totalCourse,
+            total_free_course: freeCourses.length
         })
     } catch (error) {
         return res.status(500).json({

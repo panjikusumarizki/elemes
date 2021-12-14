@@ -17,7 +17,7 @@ const createToken = async (req, res) => {
         }
 
         const userData = {
-            id: user._id,
+            id: userId,
             nama: user.nama,
             email: user.email,
             admin: user.isAdmin
@@ -79,7 +79,7 @@ const getToken = async (req, res) => {
                 })
             }
 
-            const token = jwt.sign({ data: decoded.data }, JWT_KEY, { expiresIn: '24h' })
+            const token = jwt.sign({ data: decoded }, JWT_KEY, { expiresIn: '24h' })
 
             return res.json({
                 status: 'success',
