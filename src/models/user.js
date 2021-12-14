@@ -1,5 +1,4 @@
-import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
+const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
     nama: {
@@ -19,18 +18,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     token: {
-        type: String,
+        type: String
     },
     isActive: {
         type: Number,
         required: true
-    }
-})
-
-userSchema.pre('save', async (next) => {
-    const user = this
-    if (user.isModified('password')) {
-        user.password = await bcrypt.hash(user.password, 10)
     }
 })
 
