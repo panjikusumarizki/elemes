@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const { ObjectId } = mongoose.Schema
 
 const courseSchema = new mongoose.Schema({
@@ -11,7 +11,7 @@ const courseSchema = new mongoose.Schema({
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     id_image: [{
@@ -23,7 +23,8 @@ const courseSchema = new mongoose.Schema({
         ref: 'Category'
     },
     is_popular: {
-        type: Number
+        type: Number,
+        default: 0
     }
 })
 
