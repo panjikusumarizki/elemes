@@ -66,19 +66,20 @@ const deleteCategory = async (req, res) => {
     const { id } = req.params
 
     try {
-        if (!id) {
+        const category = await Category.findOne({ _id: id })
+        if (!category) {
             return res.status(404).send({
                 status: 'error',
                 message: 'id tidak ditemukan'
             })
-        }
-        const category = await Category.findOne({ _id: id })
-        await category.remove()
+        } else {
+            await category.remove()
 
-        return res.send({
-            status: 'success',
-            message: 'Edit kategori berhasil'
-        })
+            return res.send({
+                status: 'success',
+                message: 'Hapus kategori berhasil'
+            })
+        }
     } catch (error) {
         return res.status(500).json({
             status: 'error',

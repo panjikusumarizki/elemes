@@ -162,22 +162,23 @@ const logout = async (req, res) => {
         const userId = req.body.userId
         const users = await user.findOne({ _id: userId })
         const refreshToken = await RefreshToken.findOne({ id_user: userId })
-        refreshToken.remove()
 
-        if (!users) {
+        if (users && refreshToken) {
+            refreshToken.remove()
+
+            users.token = ''
+            await users.save()
+
+            return res.json({
+                status: 'success',
+                message: 'logout success'
+            })
+        } else {
             return res.status(404).json({
                 status: 'error',
                 message: 'user not found'
             })
         }
-
-        users.token = ''
-        await users.save()
-
-        return res.json({
-            status: 'success',
-            message: 'logout success'
-        })
     } catch (error) {
         return res.status(500).json({
             status: 'error',
