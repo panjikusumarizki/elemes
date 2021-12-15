@@ -101,7 +101,14 @@ const getPopularCourse = async (req, res) => {
 
 const getDetailCourse = async (req, res) => {
     const { id } = req.params
+    
     try {
+        if (!id) {
+            return res.send({
+                status: 'error',
+                message: 'id tidak ditemukan'
+            })
+        }
         const getDetail = await Course.find({ _id: id })
                                         .populate({ path: 'id_image', select: 'id image_url public_id'})
                                         .populate({ path: 'id_category', select: 'id nama'})
@@ -169,6 +176,13 @@ const editCourse = async (req, res) => {
     const { nama, mentor, price, categoryId, isPopular } = req.body
 
     try {
+        if (!id) {
+            return res.send({
+                status: 'error',
+                message: 'id tidak ditemukan'
+            })
+        }
+
         const course = await Course.findOne({ _id: id })
                     .populate({ path: 'id_image', select: 'id image_url public_id'})
                     .populate({ path: 'id_category', select: 'id nama'})
@@ -243,6 +257,13 @@ const deleteCourse = async (req, res) => {
     const { id } = req.params
 
     try {
+        if (!id) {
+            return res.send({
+                status: 'error',
+                message: 'id tidak ditemukan'
+            })
+        }
+
         const course = await Course.findOne({ _id: id })
                         .populate('id_image')
                         .populate({ path: 'id_category', select: 'id'})

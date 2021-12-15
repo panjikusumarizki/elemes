@@ -76,7 +76,7 @@ const login = async (req, res) => {
         const checkUser = await user.findOne({email})
 
         if (checkUser.isActive === 0) {
-            return res.json({
+            return res.status(404).json({
                 status: 'success',
                 message: 'Akun tidak ditemukan'
             })
